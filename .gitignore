@@ -1,0 +1,23 @@
+# colcon
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Experiment outputs (keep configs, not raw data)
+experiments/feedback_on/*
+experiments/feedback_off/*
+experiments/evaluation/*
+!experiments/**/.gitkeep
+*.db3
+*.mcap
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
