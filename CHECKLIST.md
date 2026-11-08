@@ -9,7 +9,7 @@ Items marked **(new)** come from decisions made in `docs/deviations.md`, `docs/c
 - [x] Identify which algorithms will be reproduced faithfully and which will be simplified. → `docs/deviations.md`
 - [x] Define coordinate frames, units, camera conventions, and ROS 2 message interfaces. → `docs/conventions.md`, `docs/interfaces.md`
 - [x] Define measurable success criteria and initial experiment configurations. → `docs/evaluation_plan.md`, `experiments/configs/phase1_main.yaml`
-- [ ] Create a modular reconstruction interface for future backends.
+- [x] Create a modular reconstruction interface for future backends. → `cr_tsdf_mapping/reconstruction_backend.py`
 - [x] **(new)** Amend Principle 8 in `ARCHITECTURE.md` (safety-only keep-out map, D13).
 
 **Completion:** A documented architecture, implementation specification, and initialized repository.
