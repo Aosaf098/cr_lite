@@ -1,0 +1,70 @@
+# Phase 1 main experiment configuration.
+# See docs/evaluation_plan.md. Values marked PILOT are set during the pilot
+# phase (evaluation_plan.md §4.4). Then this file is committed and tagged
+# `experiments-frozen`. Main trials must not run while any PILOT value is null.
+
+experiment:
+  name: phase1_main
+  plan: docs/evaluation_plan.md
+  seeds: [0, 1, 2, 3, 4]              # extended to 0-14 only by the §6 rule
+  pilot_seeds: [100, 101, 102]
+  mission_duration_s: 600.0           # PILOT: provisional, set by §4.2 rule
+  checkpoint_fractions: [0.25, 0.5, 0.75, 1.0]
+  initial_poses_file: experiments/configs/initial_poses.yaml   # generated once the scene exists
+
+conditions:
+  C0: { feedback_enabled: false, depth_noise: false }
+  C1: { feedback_enabled: true,  depth_noise: false }
+  C2: { feedback_enabled: false, depth_noise: true }
+  C3: { feedback_enabled: true,  depth_noise: true }
+
+# Everything below is shared by all conditions.
+
+sensing:                 # paper Eq. (1)
+  D_m: 1.0
+  sigma_1: 0.07
+  sigma_2: null          # PILOT: default = formula with yaw spacing (D8)
+  sigma_3: 0.3
+
+observation_field:       # D10, D11
+  position_spacing_m: 0.5
+  yaw_bins: 8
+  pitch_range_rad: [1.0471975512, 1.5707963268]   # [pi/3, pi/2]
+  pitch_bins: 2
+  target_region_B: null  # set once the scene layout exists: [xmin, ymin, zmin, xmax, ymax, zmax]
+
+importance:              # Eqs. (2), (4), (23)
+  delta_1: 3.0
+  delta_2_prime: 1.0
+  J_threshold: 0.5
+
+feedback:                # Eq. (6), D9
+  grid_spacing_m: 0.3
+  sigma_4: 0.4
+  kappa: null            # PILOT: median-calibration procedure
+  allow_version_gaps: false
+
+controller:              # Eq. (19), D6, D7, D12, D14
+  rate_hz: 5.0
+  epsilon: 0.01
+  gamma: null            # PILOT: sweep [0.001, 0.003, 0.01]
+  a_performance: 1.0
+  a_pitch: 1.0
+  a_workspace: 1.0
+  a_obstacle: 1.0
+  input_bounds: { linear_mps: 0.5, yaw_rate_rps: 0.5, pitch_rate_rps: 0.3 }
+  max_state_age_s: 0.5
+
+depth_noise:             # §4.5, applied only when depth_noise: true
+  model: nguyen2012_axial
+  a_m: 0.0012
+  b_per_m: 0.0019
+  z0_m: 0.4
+
+evaluation:
+  fscore_thresholds_m: [0.05, 0.025]
+  primary_threshold_m: 0.05
+  gt_sample_spacing_m: 0.01
+  min_practical_effect: 0.02
+  bootstrap_resamples: 10000
+  max_dropped_frame_fraction: 0.05
