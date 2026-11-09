@@ -225,3 +225,17 @@ $J_{\mathrm{th}} = 0.5$ and $\delta_2' = 1.0$, as in the paper. The feedback-dis
 ## 7. Parameters Kept from the Paper
 
 $D = 1.0$, $\sigma_1 = 0.07$, $\sigma_3 = 0.3$, $\sigma_4 = 0.4$, $\delta_1 = 3.0$, $\delta_2' = 1.0$, $a_1 = a_2 = 1.0$, $\epsilon = 0.01$, $J_{\mathrm{th}} = 0.5$, $\eta = 0.05$ m, $\phi_j(0) = 1$.
+
+## D21 — TSDF backend uses Open3D tensor `VoxelBlockGrid`, not legacy `ScalableTSDFVolume`
+
+**Architecture says:** "Use a scalable or voxel-hashed TSDF implementation" (§4.5).
+
+**Decision:** `Open3DTSDFBackend` uses `o3d.t.geometry.VoxelBlockGrid` (tsdf, weight, color), CPU device in Phase 1.
+
+**Why:** On Open3D 0.20.0, the legacy `pipelines.integration.ScalableTSDFVolume` allocated no voxels for verified-correct input. Back-projection of the same frames was correct, so this is not a convention error (`tests/smoke/diag_open3d.py`). `VoxelBlockGrid` is the voxel-hashed implementation Open3D recommends, and it passes `tests/smoke/smoke_open3d.py`.
+
+**Consequences:**
+- Truncation is given in voxels: `trunc_voxel_multiplier = 0.09 / 0.03 = 3.0`.
+- Mesh extraction must pass `weight_threshold` explicitly (default 3.0). The smoke test uses 1.0. The production value becomes a `mapping.yaml` parameter.
+- Same pinhole intrinsics and world-to-camera extrinsic as before.
+- A CUDA device is available for later if CPU latency becomes a bottleneck.
