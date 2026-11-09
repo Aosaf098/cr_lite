@@ -61,6 +61,8 @@ class CameraIntrinsics:
                 f"{self.width}x{self.height} image"
             )
 
+    # The as_matrix() method converts them into a camera calibration matrix
+    
     def as_matrix(self) -> np.ndarray:
         return np.array(
             [[self.fx, 0.0, self.cx], [0.0, self.fy, self.cy], [0.0, 0.0, 1.0]],

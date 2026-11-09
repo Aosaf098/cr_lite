@@ -12,19 +12,27 @@ Items marked **(new)** come from decisions made in `docs/deviations.md`, `docs/c
 - [x] Create a modular reconstruction interface for future backends. → `cr_tsdf_mapping/reconstruction_backend.py`
 - [x] **(new)** Amend Principle 8 in `ARCHITECTURE.md` (safety-only keep-out map, D13).
 
-**Completion:** A documented architecture, implementation specification, and initialized repository.
+**Completion:** A documented architecture, implementation specification, and initialized repository. ✅ Done
 
 ## 2. Development environment
 
-- [ ] Verify Ubuntu 22.04, Python, and ROS 2 Humble.
-- [ ] Create the ROS 2 colcon workspace and Python environment.
-- [ ] Install MuJoCo, Open3D, NumPy, SciPy, OpenCV, OSQP, and plotting tools.
-- [ ] Install ROS 2 image, TF, visualization, and testing dependencies.
-- [ ] **(new)** Generate the ROS 2 packages with `ros2 pkg create`. `cr_interfaces` uses ament_cmake; all others use ament_python, including the new `cr_common`.
-- [ ] Verify MuJoCo offscreen rendering, Open3D mesh extraction, and OSQP solving.
-- [ ] Record and pin dependency versions.
+- [x] Verify Ubuntu 22.04, Python, and ROS 2 Humble. → Ubuntu 22.04.5, Python 3.10.12, ROS 2 Humble, RTX 3060 (driver 595.99)
+- [x] Create the ROS 2 colcon workspace and Python environment. → `.venv` with `--system-site-packages`, `env.sh`; always build with `python -m colcon build --symlink-install`
+- [x] Install MuJoCo, Open3D, NumPy, SciPy, OpenCV, OSQP, and plotting tools. → pip into `.venv`; OpenCV from apt (`python3-opencv`)
+- [x] Install ROS 2 image, TF, visualization, and testing dependencies. → `environment/apt-packages.txt`
+- [x] **(new)** Generate the ROS 2 packages with `ros2 pkg create`. `cr_interfaces` uses ament_cmake; all others use ament_python, including the new `cr_common`. → 11 packages; packaging added around the existing `cr_tsdf_mapping` backend interface
+- [x] Verify MuJoCo offscreen rendering, Open3D mesh extraction, and OSQP solving. → `tests/smoke/run_all.sh`
+- [x] Record and pin dependency versions. → `requirements.txt`, `requirements.lock.txt`, `environment/system_versions.txt`; lock file verified by rebuilding a clean venv
+- [x] **(new)** TSDF backend uses Open3D's tensor `VoxelBlockGrid` instead of the legacy `ScalableTSDFVolume`. → `docs/deviations.md` D15
 
-**Completion:** All core libraries pass isolated smoke tests.
+**Completion:** All core libraries pass isolated smoke tests. ✅ Done (all 12 checks pass)
+
+**Carry-forward notes:**
+- Keep NumPy below 2.0: ROS 2 Humble's `cv_bridge` is built against NumPy 1.x.
+- Don't upgrade `setuptools` in `.venv`; newer versions break colcon `ament_python` builds on Humble.
+- Rendering uses `MUJOCO_GL=egl`, which gives headless GPU rendering for the bridge.
+- Section 5: `VoxelBlockGrid` truncation is given in voxels (`trunc_voxel_multiplier = 3.0`), and mesh extraction needs an explicit `weight_threshold` (default 3.0). Make it a `mapping.yaml` parameter.
+- Section 8: OSQP 1.x reports infeasibility as a status but raises an exception for invalid data. The controller fallback must handle both.
 
 ## 3. MuJoCo environment and drone
 
@@ -62,7 +70,7 @@ Items marked **(new)** come from decisions made in `docs/deviations.md`, `docs/c
 ## 5. Open3D TSDF reconstruction
 
 - [ ] Implement a standalone TSDF mapper using recorded RGB-D frames.
-- [ ] Configure voxel size, truncation distance, depth range, and integration weights.
+- [ ] Configure voxel size, truncation distance, depth range, and integration weights (`VoxelBlockGrid`, D15: truncation in voxels, explicit `weight_threshold`).
 - [ ] Validate camera intrinsics and world-to-camera extrinsics (test T6; extrinsic $= T_{\mathrm{opt\_world}}$).
 - [ ] **(new)** Replace NaN with 0 before integration (`conventions.md` §5).
 - [ ] Integrate sequential depth frames into a persistent TSDF volume.
@@ -111,7 +119,7 @@ Items marked **(new)** come from decisions made in `docs/deviations.md`, `docs/c
 - [ ] Add camera pitch (two linear barriers, D6) and input-bound constraints (D14).
 - [ ] Implement OSQP solving and `CoverageStatus` reporting.
 - [ ] Separate soft performance constraints from hard safety constraints.
-- [ ] Handle infeasible QPs, stale inputs, and solver failures safely.
+- [ ] Handle infeasible QPs, stale inputs, and solver failures safely (OSQP 1.x: infeasibility is a status, invalid data raises an exception).
 - [ ] **(new)** Finite-difference tests for all CBF gradients (criterion E4).
 - [ ] Validate commands in simple analytical and simulated scenarios.
 - [ ] Connect controller outputs to the MuJoCo motion interface (via `/drone_1/cmd_desired`).
@@ -129,7 +137,7 @@ Items marked **(new)** come from decisions made in `docs/deviations.md`, `docs/c
 - [ ] Implement asynchronous mesh processing and stale-map handling.
 - [ ] Implement autonomous mission start, stop, and reset (`experiment_runner`, reset order from `interfaces.md` §5).
 - [ ] Run a complete autonomous reconstruction mission.
-- [ ] Log all important states, timings, commands, and reconstruction versions (criterion E9 run directory).
+- [ ] Log all important states, timings, commands, and reconstruction versions (criterion E9 run directory; include `scripts/record_env.sh` output).
 
 **Completion:** The drone autonomously reconstructs the scene and adapts its observations based on mesh feedback.
 
