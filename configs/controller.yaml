@@ -1,0 +1,21 @@
+# Static collision-safety configuration
+# Coordinates in world frame, metres.
+
+safety:
+  drone_radius_m: 0.15
+  clearance_margin_m: 0.20
+  # Allowed drone-centre flight region in world coordinates.
+  # [xmin, ymin, zmin, xmax, ymax, zmax]
+  workspace_bounds: [-1.65, -1.65, 0.8, 1.65, 1.65, 2.5]
+
+  # Each box is [xmin, ymin, zmin, xmax, ymax, zmax].
+  # Includes 0.35 m inflation around furniture.
+  keepout_boxes:
+    - name: table
+      bounds: [-1.55, -0.65, -0.35, 0.25, 0.85, 1.15]
+
+    - name: cabinet
+      bounds: [0.20, 0.05, -0.35, 1.60, 1.45, 1.45]
+
+    - name: bench
+      bounds: [-0.05, -1.50, -0.35, 1.55, -0.30, 0.80]

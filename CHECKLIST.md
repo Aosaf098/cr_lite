@@ -36,17 +36,17 @@ Items marked **(new)** come from decisions made in `docs/deviations.md`, `docs/c
 
 ## 3. MuJoCo environment and drone
 
-- [ ] Create a small indoor MJCF environment with walls, floor, and objects. Origin at the floor centre, room spanning $x, y \in [-2, 2]$ m and $z \in [0, 3]$ m.
-- [ ] **(new)** Define the target region $\mathcal{B}$ around the furniture (D11) and record it in `phase1_main.yaml`.
-- [ ] **(new)** Write the keep-out box map (furniture plus margin) to `configs/controller.yaml` (D13).
-- [ ] Add a simulated drone body with configurable initial pose (position-only base, gimbal yaw and pitch).
-- [ ] Implement basic kinematic translation and rotation ($\dot p = u$, D4).
-- [ ] Add a camera with configurable gimbal (yaw then pitch, pitch positive down). Use `fovy` = 55.2° at 320×240.
-- [ ] Implement RGB and depth rendering from the camera.
-- [ ] Convert MuJoCo depth-buffer output into metric z-depth.
-- [ ] Generate ground-truth scene geometry for evaluation (1 cm surface sampling, D19).
-- [ ] Implement collision detection, workspace boundaries, and simulation reset.
-- [ ] **(new)** Generate `experiments/configs/initial_poses.yaml` for the evaluation and pilot seeds.
+- [x] Create a small indoor MJCF environment with walls, floor, and objects. Origin at the floor centre, room spanning $x, y \in [-2, 2]$ m and $z \in [0, 3]$ m.
+- [x] **(new)** Define the target region $\mathcal{B}$ around the furniture (D11) and record it in `phase1_main.yaml`.
+- [x] **(new)** Write the keep-out box map (furniture plus margin) to `configs/controller.yaml` (D13).
+- [x] Add a simulated drone body with configurable initial pose (position-only base, gimbal yaw and pitch).
+- [x] Implement basic kinematic translation and rotation ($\dot p = u$, D4).
+- [x] Add a camera with configurable gimbal (yaw then pitch, pitch positive down). Use `fovy` = 55.2° at 320×240.
+- [x] Implement RGB and depth rendering from the camera.
+- [x] Convert MuJoCo depth-buffer output into metric z-depth.
+- [x] Generate ground-truth scene geometry for evaluation (1 cm surface sampling, D19).
+- [x] Implement collision detection, workspace boundaries, and simulation reset.
+- [x] **(new)** Generate `experiments/configs/initial_poses.yaml` for the evaluation and pilot seeds.
 
 **Completion:** A drone can move through the environment and capture geometrically correct RGB-D images.
 

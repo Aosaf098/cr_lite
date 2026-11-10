@@ -45,5 +45,58 @@
     <!-- Low bench: 0.90 x 0.50 x 0.45 m. -->
     <geom name="bench" type="box" pos="0.75 -0.90 0.225"
           size="0.45 0.25 0.225" rgba="0.38 0.59 0.40 1"/>
+
+      <!-- Stage 3.4: Kinematic drone body -->
+      <!-- Kinematic drone with two-axis gimbal -->
+      <body name="drone_1" mocap="true" pos="0 1 2">
+      <geom name="drone_1_visual"
+            type="sphere"
+            size="0.15"
+            group="1"
+            rgba="1 0.7 0.1 1"
+            contype="0" conaffinity="0"/>
+
+      <!-- Gimbal yaw: rotation about local +z -->
+      <body name="drone_1_gimbal_yaw">
+            <joint name="drone_1_yaw_joint"
+                  type="hinge"
+                  axis="0 0 1"
+                  damping="0"/>
+
+            <geom name="gimbal_yaw_mount"
+                  type="sphere"
+                  size="0.015"
+                  group="1"
+                  mass="0.01"
+                  rgba="0.2 0.2 0.2 1"
+                  contype="0" conaffinity="0"/>
+
+            <!-- Gimbal pitch: positive rotation tilts +x downward -->
+            <body name="drone_1_camera_link">
+                  <joint name="drone_1_pitch_joint"
+                        type="hinge"
+                        axis="0 1 0"
+                        limited="true"
+                        range="1.0471975512 1.5707963268"
+                        damping="0"/>
+
+                  <geom name="camera_mount"
+                        type="box"
+                        pos="0.06 0 0"
+                        size="0.04 0.03 0.025"
+                        group="1"
+                        mass="0.01"
+                        rgba="0.15 0.15 0.15 1"
+                        contype="0" conaffinity="0"/>
+                  <!-- RGB-D camera: follows gimbal yaw and pitch -->
+                  <!-- MuJoCo camera -Z points along camera_link +X -->
+                  <camera name="drone_1_rgbd"
+                        mode="fixed"
+                        pos="0 0 0"
+                        xyaxes="0 -1 0 0 0 1"
+                        fovy="55.2"/>
+            </body>
+      </body>
+      </body>
   </worldbody>
 </mujoco>
