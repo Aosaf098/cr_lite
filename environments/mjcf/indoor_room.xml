@@ -1,0 +1,49 @@
+<mujoco model="cr_lite_indoor_room">
+  <!-- Coverage-Recon Lite, Stage 3.1: static indoor environment.
+       World frame: right-handed, z-up, metres.
+       Inner room boundaries: x,y = [-2, 2] m; floor z=0; ceiling height 3 m.
+       The drone, gimbal, and camera are deliberately added in later steps. -->
+  <compiler angle="radian"/>
+  <option timestep="0.005" gravity="0 0 -9.81"/>
+  <visual>
+    <global offwidth="320" offheight="240"/>
+  </visual>
+  <worldbody>
+    <light name="ceiling_light" pos="0 0 2.85" dir="0 0 -1"
+           diffuse="0.9 0.9 0.9"/>
+
+    <!-- Floor surface at z=0 (box extends below the floor). -->
+    <geom name="floor" type="box" pos="0 0 -0.05"
+          size="2 2 0.05" rgba="0.70 0.70 0.70 1"/>
+
+    <!-- Interior wall faces at x=+-2 and y=+-2; walls rise to z=3. -->
+    <geom name="wall_x_plus" type="box" pos="2.05 0 1.5"
+          size="0.05 2.1 1.5" rgba="0.83 0.85 0.89 1"/>
+    <geom name="wall_x_minus" type="box" pos="-2.05 0 1.5"
+          size="0.05 2.1 1.5" rgba="0.83 0.85 0.89 1"/>
+    <geom name="wall_y_plus" type="box" pos="0 2.05 1.5"
+          size="2.1 0.05 1.5" rgba="0.80 0.82 0.86 1"/>
+    <geom name="wall_y_minus" type="box" pos="0 -2.05 1.5"
+          size="2.1 0.05 1.5" rgba="0.80 0.82 0.86 1"/>
+
+    <!-- A table: top surface z=0.80 m, with four legs. -->
+    <geom name="table_top" type="box" pos="-0.65 0.10 0.75"
+          size="0.55 0.40 0.05" rgba="0.52 0.32 0.19 1"/>
+    <geom name="table_leg_1" type="box" pos="-1.12 -0.22 0.35"
+          size="0.045 0.045 0.35" rgba="0.38 0.23 0.13 1"/>
+    <geom name="table_leg_2" type="box" pos="-1.12 0.42 0.35"
+          size="0.045 0.045 0.35" rgba="0.38 0.23 0.13 1"/>
+    <geom name="table_leg_3" type="box" pos="-0.18 -0.22 0.35"
+          size="0.045 0.045 0.35" rgba="0.38 0.23 0.13 1"/>
+    <geom name="table_leg_4" type="box" pos="-0.18 0.42 0.35"
+          size="0.045 0.045 0.35" rgba="0.38 0.23 0.13 1"/>
+
+    <!-- Cabinet: 0.70 x 0.70 x 1.10 m. -->
+    <geom name="cabinet" type="box" pos="0.90 0.75 0.55"
+          size="0.35 0.35 0.55" rgba="0.30 0.48 0.66 1"/>
+
+    <!-- Low bench: 0.90 x 0.50 x 0.45 m. -->
+    <geom name="bench" type="box" pos="0.75 -0.90 0.225"
+          size="0.45 0.25 0.225" rgba="0.38 0.59 0.40 1"/>
+  </worldbody>
+</mujoco>
